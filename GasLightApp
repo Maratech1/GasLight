@@ -1,0 +1,30 @@
+import requests
+
+def get_gas_prices():
+    """
+    Fetch and display current Ethereum gas prices.
+    """
+    api_key = "IJDQJ4NKGAMED8CBDIFZA4PMGWJC2ZVG9N"  # Replace with your Etherscan API key
+    url = f"https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey={api_key}"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an error for bad HTTP responses
+        data = response.json()
+
+        if data["status"] == "1":
+            print("Current Gas Prices (in Gwei):")
+            print(f"Low: {data['result']['SafeGasPrice']} Gwei")
+            print(f"Average: {data['result']['ProposeGasPrice']} Gwei")
+            print(f"High: {data['result']['FastGasPrice']} Gwei")
+        else:
+            print("Error fetching gas prices. Please check your API key and try again.")
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error connecting to the API: {e}")
+    except KeyError:
+        print("Unexpected response format. Please check the API documentation.")
+
+if __name__ == "__main__":
+    print("Welcome to Gaslight! Your simple Ethereum gas price tracker.")
+    get_gas_prices()
